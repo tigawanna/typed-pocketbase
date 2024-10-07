@@ -300,7 +300,7 @@ function buildCollectionDefinitions(collections: Collection[]) {
 					);
 
 					target.relations.push({
-						name: `${collection.name}(${field.name})`,
+						name: `${collection.name}_via_${field.name}`,
 						target: from,
 						unique: isUnique
 					});
