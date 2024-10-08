@@ -267,7 +267,7 @@ function buildCollectionDefinitions(collections: Collection[]) {
 			if (field.type === 'relation') {
 				deferred.push(() => {
 					const from = definitions.get(collection.id);
-					const target = definitions.get(field.options.collectionId);
+					const target = definitions.get(field.collectionId);
 
 					if (!from)
 						throw new Error(
@@ -275,13 +275,13 @@ function buildCollectionDefinitions(collections: Collection[]) {
 						);
 					if (!target)
 						throw new Error(
-							`Collection ${field.options.collectionId} not found for relation ${collection.name}.${field.name}`
+							`Collection ${field.collectionId} not found for relation ${collection.name}.${field.name}`
 						);
 
 					relations.push({
 						name: field.name,
 						target,
-						unique: field.options.maxSelect === 1
+						unique: field.maxSelect === 1
 					});
 
 					/**
@@ -367,11 +367,11 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 			break;
 		}
 		case 'select': {
-			const single = field.options.maxSelect === 1;
+			const single = field.maxSelect === 1;
 			const values =
 				!field.required && single
-					? ['', ...field.options.values]
-					: field.options.values;
+					? ['', ...field.values]
+					: field.values;
 			const singleType = values.map((v) => `'${v}'`).join(' | ');
 			const type = single ? `${singleType}` : `MaybeArray<${singleType}>`;
 
@@ -387,7 +387,7 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 		}
 		case 'relation': {
 			const singleType = 'string';
-			const single = field.options.maxSelect === 1;
+			const single = field.maxSelect === 1;
 			const type = single ? singleType : `MaybeArray<${singleType}>`;
 
 			addResponse(single ? singleType : `Array<${singleType}>`);
@@ -400,7 +400,7 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 			break;
 		}
 		case 'file': {
-			const single = field.options.maxSelect === 1;
+			const single = field.maxSelect === 1;
 
 			addResponse(single ? 'string' : `Array<string>`);
 			addCreate(single ? `File | null` : `MaybeArray<File>`);
