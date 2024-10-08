@@ -30,8 +30,8 @@ interface CollectionDefinition {
 
 export async function generateTypes({ url, email, password }: GenerateOptions) {
 	const pb = new PocketBase(url);
-	await pb.admins.authWithPassword(email, password);
-
+	// await pb.admins.authWithPassword(email, password);
+   	await pb.collection('_superusers').authWithPassword(email, password);
 	const collections = await pb.collections.getFullList<Collection>();
 	const definitions = buildCollectionDefinitions(collections);
 
