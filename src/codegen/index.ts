@@ -261,7 +261,7 @@ function buildCollectionDefinitions(collections: Collection[]) {
 		};
 		const relations: Relation[] = [];
 
-		for (const field of collection.schema) {
+		for (const field of collection.fields) {
 			getFieldType(field, columns);
 
 			if (field.type === 'relation') {

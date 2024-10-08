@@ -3,7 +3,7 @@ import { SchemaField, CollectionModel } from 'pocketbase';
 export type CollectionType = 'auth' | 'view' | 'base';
 
 interface GenericCollection extends CollectionModel {
-	schema: Field[];
+	fields: Field[];
 }
 
 export interface BaseCollection extends GenericCollection {
