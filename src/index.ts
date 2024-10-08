@@ -22,7 +22,7 @@ export type { GenericSchema, GenericCollection, TypedRecord } from './types.js';
 export {
 	type AuthCollectionService,
 	type BaseCollectionService,
-	type ViewCollectionService,
-	TypedPocketBase,
-	TypedRecordService
-} from './client.js';
+	type ViewCollectionService
+} from './client/record-interface.js';
+export { TypedRecordService } from './client/record-service.js';
+export { TypedPocketBase } from './client.js';
