@@ -40,8 +40,10 @@ export type FieldType =
 	| 'number'
 	| 'bool'
 	| 'email'
+	| 'password'
 	| 'url'
 	| 'date'
+	| 'autodate'
 	| 'select'
 	| 'relation'
 	| 'file'
@@ -49,93 +51,97 @@ export type FieldType =
 
 export interface TextField extends SchemaField {
 	type: 'text';
-	options: {
-		min: number | null;
-		max: number | null;
-		pattern: string | null;
-	};
+	hidden: boolean;
+	min: number | null;
+	max: number | null;
+	pattern: string | null;
 }
 
 export interface EditorField extends SchemaField {
 	type: 'editor';
-	options: {
-		exceptDomains: [];
-		onlyDomains: [];
-	};
+	hidden: boolean;
+	exceptDomains: [];
+	onlyDomains: [];
 }
 
 export interface NumberField extends SchemaField {
 	type: 'number';
-	options: {
-		min: number | null;
-		max: number | null;
-	};
+	hidden: boolean;
+	min: number | null;
+	max: number | null;
 }
 
 export interface BoolField extends SchemaField {
 	type: 'bool';
-	options: {};
+	hidden: boolean;
 }
-
 export interface EmailField extends SchemaField {
 	type: 'email';
-	options: {
-		exceptDomains: [] | null;
-		onlyDomains: [] | null;
-	};
+	exceptDomains: [] | null;
+	onlyDomains: [] | null;
+	hidden: boolean;
+}
+export interface PasswordField extends SchemaField {
+	type: 'password';
+	min: number;
+	max: number;
+	hidden: boolean;
 }
 
 export interface UrlField extends SchemaField {
 	type: 'url';
-	options: {
-		exceptDomains: [];
-		onlyDomains: [];
-	};
+	hidden: boolean;
+	exceptDomains: [];
+	onlyDomains: [];
 }
 
 export interface DateField extends SchemaField {
 	type: 'date';
-	options: {
-		min: string;
-		max: string;
-	};
+	hidden: boolean;
+	min: string;
+	max: string;
+}
+
+export interface AutoDateField extends SchemaField {
+	type: 'autodate';
+	min: string;
+	max: string;
+	hidden: boolean;
+	onCreate: boolean;
+	onUpdate: boolean;
 }
 
 export interface SelectField extends SchemaField {
 	type: 'select';
-	options: {
-		maxSelect: number;
-		values: string[];
-	};
+	hidden: boolean;
+	maxSelect: number;
+	values: string[];
 }
 
 export interface RelationField extends SchemaField {
 	type: 'relation';
-	options: {
-		collectionId: string;
-		cascadeDelete: boolean;
-		minSelect: number | null;
-		maxSelect: number;
-		displayFields: string[] | null;
-	};
+	hidden: boolean;
+	collectionId: string;
+	cascadeDelete: boolean;
+	minSelect: number | null;
+	maxSelect: number;
+	displayFields: string[] | null;
 }
 
 export interface FileField extends SchemaField {
 	type: 'file';
-	options: {
-		maxSelect: number;
-		maxSize: number;
-		mimeTypes: string[];
-		thumbs: string[] | null;
-		protected: boolean;
-	};
+	hidden: boolean;
+	maxSelect: number;
+	maxSize: number;
+	mimeTypes: string[];
+	thumbs: string[] | null;
+	protected: boolean;
 }
 
 export interface JsonField extends SchemaField {
 	type: 'json';
-	options: {
-		maxSize: number;
-	};
+	hidden: boolean;
+	maxSize: number;
 }
 
 export type Field =
@@ -146,6 +152,8 @@ export type Field =
 	| EmailField
 	| UrlField
 	| DateField
+	| PasswordField
+	| AutoDateField
 	| SelectField
 	| RelationField
 	| FileField
