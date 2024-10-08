@@ -86,6 +86,10 @@ export interface AuthCollectionResponse extends BaseCollectionResponse {
 	 */
 	email: string;
 	/**
+	 * Auth record email address.
+	 */
+	tokenKey?: string;
+	/**
 	 * Whether to show/hide the auth record email when fetching the record data.
 	 */
 	emailVisibility: boolean;
@@ -344,7 +348,7 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 			break;
 		}
 		case 'password': {
-			addCreate('string | URL');
+			addCreate('string');
 			break;
 		}
 		case 'url': {
