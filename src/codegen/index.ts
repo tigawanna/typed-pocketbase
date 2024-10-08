@@ -336,11 +336,15 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 		addUpdate(type);
 	};
 
-	switch (field.type) {
+  switch (field.type) {
 		case 'text':
 		case 'editor': // rich text
 		case 'email': {
 			addAll('string');
+			break;
+		}
+		case 'password': {
+			addCreate('string | URL');
 			break;
 		}
 		case 'url': {
@@ -350,6 +354,12 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 			break;
 		}
 		case 'date': {
+			addCreate('string | Date');
+			addUpdate('string | Date');
+			addResponse('string');
+			break;
+		}
+		case 'autodate': {
 			addCreate('string | Date');
 			addUpdate('string | Date');
 			addResponse('string');
@@ -367,6 +377,7 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 			break;
 		}
 		case 'select': {
+			console.log('select field', field);
 			const single = field.maxSelect === 1;
 			const values =
 				!field.required && single
@@ -387,6 +398,7 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 		}
 		case 'relation': {
 			const singleType = 'string';
+			console.log('relation field', field);
 			const single = field.maxSelect === 1;
 			const type = single ? singleType : `MaybeArray<${singleType}>`;
 
@@ -400,8 +412,8 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 			break;
 		}
 		case 'file': {
+			console.log('file field', field);
 			const single = field.maxSelect === 1;
-
 			addResponse(single ? 'string' : `Array<string>`);
 			addCreate(single ? `File | null` : `MaybeArray<File>`);
 			addUpdate(single ? `File | null` : `MaybeArray<File>`);
@@ -420,7 +432,7 @@ function getFieldType(field: Field, { response, create, update }: Columns) {
 				`Feel free to open an issue about this warning https://github.com/david-plugge/typed-pocketbase/issues.`
 			);
 			addAll('unknown');
-	}
+  }
 }
 
 function parseIndex(index: string) {
