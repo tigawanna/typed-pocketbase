@@ -311,6 +311,7 @@ function buildCollectionDefinitions(collections: Collection[]) {
 				});
 			}
 		}
+		
 
 		definitions.set(collection.id, {
 			id: collection.id,
