@@ -1,24 +1,30 @@
-import { SchemaField, CollectionModel } from 'pocketbase';
+import {
+	CollectionField,
+	BaseCollectionModel,
+	ViewCollectionModel,
+	AuthCollectionModel
+} from 'pocketbase';
+
+
+
 
 export type CollectionType = 'auth' | 'view' | 'base';
 
-interface GenericCollection extends CollectionModel {
-	fields: Field[];
-}
 
-export interface BaseCollection extends GenericCollection {
+
+export interface BaseCollection extends BaseCollectionModel {
 	type: 'base';
 	options: {};
 }
 
-export interface ViewCollection extends GenericCollection {
+export interface ViewCollection extends ViewCollectionModel {
 	type: 'view';
 	options: {
 		query: string;
 	};
 }
 
-export interface AuthCollection extends GenericCollection {
+export interface AuthCollection extends AuthCollectionModel {
 	type: 'auth';
 	options: {
 		allowEmailAuth: boolean;
@@ -49,7 +55,7 @@ export type FieldType =
 	| 'file'
 	| 'json';
 
-export interface TextField extends SchemaField {
+export interface TextField extends CollectionField {
 	type: 'text';
 	hidden: boolean;
 	min: number | null;
@@ -57,52 +63,52 @@ export interface TextField extends SchemaField {
 	pattern: string | null;
 }
 
-export interface EditorField extends SchemaField {
+export interface EditorField extends CollectionField {
 	type: 'editor';
 	hidden: boolean;
 	exceptDomains: [];
 	onlyDomains: [];
 }
 
-export interface NumberField extends SchemaField {
+export interface NumberField extends CollectionField {
 	type: 'number';
 	hidden: boolean;
 	min: number | null;
 	max: number | null;
 }
 
-export interface BoolField extends SchemaField {
+export interface BoolField extends CollectionField {
 	type: 'bool';
 	hidden: boolean;
 }
-export interface EmailField extends SchemaField {
+export interface EmailField extends CollectionField {
 	type: 'email';
 	exceptDomains: [] | null;
 	onlyDomains: [] | null;
 	hidden: boolean;
 }
-export interface PasswordField extends SchemaField {
+export interface PasswordField extends CollectionField {
 	type: 'password';
 	min: number;
 	max: number;
 	hidden: boolean;
 }
 
-export interface UrlField extends SchemaField {
+export interface UrlField extends CollectionField {
 	type: 'url';
 	hidden: boolean;
 	exceptDomains: [];
 	onlyDomains: [];
 }
 
-export interface DateField extends SchemaField {
+export interface DateField extends CollectionField {
 	type: 'date';
 	hidden: boolean;
 	min: string;
 	max: string;
 }
 
-export interface AutoDateField extends SchemaField {
+export interface AutoDateField extends CollectionField {
 	type: 'autodate';
 	min: string;
 	max: string;
@@ -111,14 +117,14 @@ export interface AutoDateField extends SchemaField {
 	onUpdate: boolean;
 }
 
-export interface SelectField extends SchemaField {
+export interface SelectField extends CollectionField {
 	type: 'select';
 	hidden: boolean;
 	maxSelect: number;
 	values: string[];
 }
 
-export interface RelationField extends SchemaField {
+export interface RelationField extends CollectionField {
 	type: 'relation';
 	hidden: boolean;
 	collectionId: string;
@@ -128,7 +134,7 @@ export interface RelationField extends SchemaField {
 	displayFields: string[] | null;
 }
 
-export interface FileField extends SchemaField {
+export interface FileField extends CollectionField {
 	type: 'file';
 	hidden: boolean;
 	maxSelect: number;
@@ -138,7 +144,7 @@ export interface FileField extends SchemaField {
 	protected: boolean;
 }
 
-export interface JsonField extends SchemaField {
+export interface JsonField extends CollectionField {
 	type: 'json';
 	hidden: boolean;
 	maxSize: number;
