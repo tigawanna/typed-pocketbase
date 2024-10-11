@@ -113,6 +113,15 @@ export interface BaseCollectionService<Collection extends GenericCollection>
 export interface AuthCollectionService<Collection extends GenericCollection>
 	extends BaseCollectionService<Collection>,
 		Pick<RecordService, (typeof FORWARD_METHODS)[number]> {
+	/**
+	 * Authenticates a user with a password.
+	 *
+	 * @param usernameOrEmail the username or email of the user
+	 * @param password the password of the user
+	 * @param options optional settings for the request
+	 *
+	 * @returns a promise that resolves to the record's authentication response
+	 */
 	authWithPassword<TSelect extends SelectWithExpand<Collection> = {}>(
 		usernameOrEmail: string,
 		password: string,
@@ -122,6 +131,18 @@ export interface AuthCollectionService<Collection extends GenericCollection>
 	): Promise<
 		RecordAuthResponse<ResolveSelectWithExpand<Collection, TSelect>>
 	>;
+	/**
+	 * Authenticates a user via OAuth2 authorization code flow.
+	 *
+	 * @param provider the OAuth2 provider name
+	 * @param code the authorization code
+	 * @param codeVerifier the code verifier
+	 * @param redirectUrl the redirect URL
+	 * @param createData optional data to create a new record with (if the user doesn't exist)
+	 * @param options optional settings for the request
+	 *
+	 * @returns a promise that resolves to the record's authentication response
+	 */
 	authWithOAuth2Code<TSelect extends SelectWithExpand<Collection> = {}>(
 		provider: string,
 		code: string,
@@ -136,11 +157,31 @@ export interface AuthCollectionService<Collection extends GenericCollection>
 	): Promise<
 		RecordAuthResponse<ResolveSelectWithExpand<Collection, TSelect>>
 	>;
+	/**
+	 * Authenticates a user using the OAuth2 flow.
+	 *
+	 * If the user is already authenticated, the request will be rejected.
+	 *
+	 * @param options settings for the request.
+	 * @param options.createData optional data to use when creating a new user.
+	 * @param options.select optional select clause for the response.
+	 * @param options... additional options to pass to the underlying method.
+	 *
+	 * @returns a promise that resolves with the authentication response
+	 */
 	authWithOAuth2(
 		options: Omit<OAuth2AuthConfig, 'createData'> & {
 			createData?: Collection['create'];
 		} & SendOptions
 	): Promise<RecordAuthResponse<Collection['response']>>;
+	/**
+	 * Authenticates a user using the refresh token.
+	 *
+	 * @param options Optional settings for the request.
+	 * @param options.select Optional select clause for the response.
+	 * @param options.select Optional select clause for the response.
+	 * @returns A promise that resolves to the authenticated user data.
+	 */
 	authRefresh<TSelect extends SelectWithExpand<Collection> = {}>(
 		options?: {
 			select?: TSelect;
@@ -148,6 +189,17 @@ export interface AuthCollectionService<Collection extends GenericCollection>
 	): Promise<
 		RecordAuthResponse<ResolveSelectWithExpand<Collection, TSelect>>
 	>;
+	/**
+	 * Authenticates a user using the provided OTP id and password.
+	 *
+	 * Only works with `auth` collections.
+	 *
+	 * @param otpId the OTP id to use for the authentication
+	 * @param password the password to use for the authentication
+	 * @param options additional options to pass to the underlying method
+	 *
+	 * @returns a promise that resolves with the authentication response
+	 */
 	authWithOTP<TSelect extends SelectWithExpand<Collection> = {}>(
 		otpId: string,
 		password: string,
