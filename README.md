@@ -13,6 +13,8 @@ Add types to the [PocketBase JavaScript SDK](https://github.com/pocketbase/js-sd
 > Extra features include 
 > - filtering collections to generate types for woth the -f flag
 > - custom types (especially for JSON fields) that won't be over written on new type generation
+> - supprot from the otp APIs
+> - support ro the batch APIs 
 
 
 
@@ -214,6 +216,21 @@ db.from('user').getFullList({
 		}
 	}
 });
+```
+
+### batch APIs
+```ts
+    const batch = db.fromBatch()
+      batch.from("users").create({...});
+      batch.from("users").upsert({...});
+      await batch.send();
+```
+
+### impersonate client
+```ts
+    const impersinateClient = await db.impersonate("_superusers","user_id_being_impersonated",20);
+    impersinateClient.from("posts").create({...});
+    impersinateClient.from("posts").update({...});
 ```
 
 ## Helper methods:
