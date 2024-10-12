@@ -1,11 +1,11 @@
 {
 	"name": "typed-pocketbase",
-	"version": "0.1.1",
+	"version": "0.0.1",
 	"description": "Add types to the PocketBase JavaScript SDK",
-	"author": "David Plugge",
+	"author": "Tigawanna",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/david-plugge/typed-pocketbase"
+		"url": "https://github.com/tigawanna/typed-pocketbase"
 	},
 	"license": "MIT",
 	"keywords": [

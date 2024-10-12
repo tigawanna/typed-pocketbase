@@ -1,30 +1,43 @@
 # typed-pocketbase
 
-[![npm](https://img.shields.io/npm/v/typed-pocketbase)](https://www.npmjs.com/package/typed-pocketbase)
-![GitHub top language](https://img.shields.io/github/languages/top/david-plugge/typed-pocketbase)
-![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/david-plugge/typed-pocketbase/main.yaml?branch=main)
+[![npm](https://img.shields.io/npm/v/typed-pocketbase)](https://www.npmjs.com/package/@tigawanna/typed-pocketbase)
+![GitHub top language](https://img.shields.io/github/languages/top/tigawanna/typed-pocketbase)
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/tigawanna/typed-pocketbase/main.yaml?branch=main)
 
 Add types to the [PocketBase JavaScript SDK](https://github.com/pocketbase/js-sdk).
+
+> [!WARNING] 
+> This is a fork only compatible with the latest version of the PocketBase JavaScript SDK (v0.22) with the pocketbase 0,23 rc
+ 
+> [!NOTE] 
+> Extra features include 
+> - filtering collections to generate types for woth the -f flag
+> - custom types (especially for JSON fields) that won't be over written on new type generation
+
+
 
 ## Installation
 
 ```bash
 # npm
-npm i typed-pocketbase
+npm i @tigawann/typed-pocketbase
 
 # pnpm
-pnpm i typed-pocketbase
+pnpm i @tigawann/typed-pocketbase
 
 # yarn
-yarn add typed-pocketbase
+yarn add @tigawann/typed-pocketbase
 ```
 
 ## Usage
 
+> [!WARNING]
+> the -o flag was removed in favour of the -d flag that lets you specify where the main (`pb-types.ts`) and custom types (`custom-types.ts`) will go
+
 Generate the types:
 
 ```bash
-npx typed-pocketbase --email admin@mail.com --password supersecretpassword -o Database.d.ts
+npx typed-pocketbase --email admin@mail.com --password supersecretpassword -d src/lib/pb
 ```
 
 The codegen tool will look for `POCKETBASE_EMAIL` and `POCKETBASE_PASSWORD` environment variables if the email or password are not passed using cli options.
@@ -147,13 +160,17 @@ db.from('posts').getFullList({
 
 ## Expanding
 
+> [!NOTE] 
+> Switeched the indirect expand synta from `comments(posts)` -> `comments_via_post` 
+
 In `typed-pocketbase` expanding happens automatically when using select.
 
 ```ts
 db.from('posts').getFullList({
 	select: {
 		expand: {
-			user: true
+			user: true,
+			comments_via_post: true
 		}
 	}
 });
