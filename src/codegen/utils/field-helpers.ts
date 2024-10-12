@@ -104,7 +104,7 @@ export function getFieldType(
 			break;
 		}
 		case 'json': {
-			addAll('any');
+			addAll('Record<string, any> | Array<any> | null');
 			break;
 		}
 		default:

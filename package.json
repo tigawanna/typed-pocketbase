@@ -26,6 +26,7 @@
 	"scripts": {
 		"build": "tsup",
 		"lint": "tsc",
+		"test": "vitest",
 		"format": "prettier --write .",
 		"ci:version": "changeset version",
 		"ci:release": "changeset publish"
@@ -42,6 +43,7 @@
 		"pocketbase": "0.22.0-rc",
 		"prettier": "^3.2.4",
 		"tsup": "^8.0.1",
-		"typescript": "^5.3.3"
+		"typescript": "^5.3.3",
+		"vitest": "^2.1.2"
 	}
 }

@@ -4,6 +4,7 @@ export interface GenerateOptions {
 	url: string;
 	email: string;
 	password: string;
+	out?: string;
 }
 
 export interface Columns {
