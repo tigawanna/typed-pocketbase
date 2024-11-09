@@ -2,7 +2,7 @@ import { Schema } from './Database.js';
 import { TypedPocketBase, eq, or } from '../src/index.js';
 
 const db = new TypedPocketBase<Schema>('http://localhost:8090');
-await db.admins.authWithPassword('admin@example.com', 'secretpassword');
+await db.from("_superusers").authWithPassword('admin@example.com', 'secretpassword');
 
 {
 	const posts = await db.from('posts').getFullList({

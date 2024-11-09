@@ -36,7 +36,7 @@ export interface BaseCollectionCreate {
 }
 
 // https://pocketbase.io/docs/api-records/#update-record
-export interface BaseCollectionUpdate {}
+export interface BaseCollectionUpdate { }
 
 // https://pocketbase.io/docs/collections/#auth-collection
 export interface AuthCollectionResponse extends BaseCollectionResponse {
@@ -48,6 +48,10 @@ export interface AuthCollectionResponse extends BaseCollectionResponse {
 	 * Auth record email address.
 	 */
 	email: string;
+	/**
+	 * Auth record email address.
+	 */
+	tokenKey?: string;
 	/**
 	 * Whether to show/hide the auth record email when fetching the record data.
 	 */
@@ -112,11 +116,11 @@ export interface AuthCollectionUpdate {
 	/**
 	 * New auth record password.
 	 */
-	password: string;
+	password?: string;
 	/**
 	 * New auth record password confirmation.
 	 */
-	passwordConfirm: string;
+	passwordConfirm?: string;
 	/**
 	 * Indicates whether the auth record is verified or not.
 	 * This field can be set only by admins or auth records with "Manage" access.
@@ -132,23 +136,265 @@ export interface ViewCollectionRecord {
 // utilities
 
 type MaybeArray<T> = T | T[];
+// ==== start of _mfas block =====
 
-// ===== users =====
+
+export interface MfasResponse extends BaseCollectionResponse {
+	collectionName: '_mfas';
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	method: string;
+	created: string;
+	updated: string;
+}
+
+export interface MfasCreate extends BaseCollectionCreate {
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	method: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface MfasUpdate extends BaseCollectionUpdate {
+	id?: string;
+	collectionRef?: string;
+	recordRef?: string;
+	method?: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface MfasCollection {
+	type: 'base';
+	collectionId: string;
+	collectionName: '_mfas';
+	response: MfasResponse;
+	create: MfasCreate;
+	update: MfasUpdate;
+	relations: Record<string, never>;
+}
+
+// ==== end of _mfas block =====
+
+// ==== start of _otps block =====
+
+
+export interface OtpsResponse extends BaseCollectionResponse {
+	collectionName: '_otps';
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	created: string;
+	updated: string;
+}
+
+export interface OtpsCreate extends BaseCollectionCreate {
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	password: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface OtpsUpdate extends BaseCollectionUpdate {
+	id?: string;
+	collectionRef?: string;
+	recordRef?: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface OtpsCollection {
+	type: 'base';
+	collectionId: string;
+	collectionName: '_otps';
+	response: OtpsResponse;
+	create: OtpsCreate;
+	update: OtpsUpdate;
+	relations: Record<string, never>;
+}
+
+// ==== end of _otps block =====
+
+// ==== start of _externalAuths block =====
+
+
+export interface ExternalAuthsResponse extends BaseCollectionResponse {
+	collectionName: '_externalAuths';
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	provider: string;
+	providerId: string;
+	created: string;
+	updated: string;
+}
+
+export interface ExternalAuthsCreate extends BaseCollectionCreate {
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	provider: string;
+	providerId: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface ExternalAuthsUpdate extends BaseCollectionUpdate {
+	id?: string;
+	collectionRef?: string;
+	recordRef?: string;
+	provider?: string;
+	providerId?: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface ExternalAuthsCollection {
+	type: 'base';
+	collectionId: string;
+	collectionName: '_externalAuths';
+	response: ExternalAuthsResponse;
+	create: ExternalAuthsCreate;
+	update: ExternalAuthsUpdate;
+	relations: Record<string, never>;
+}
+
+// ==== end of _externalAuths block =====
+
+// ==== start of _authOrigins block =====
+
+
+export interface AuthOriginsResponse extends BaseCollectionResponse {
+	collectionName: '_authOrigins';
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	fingerprint: string;
+	created: string;
+	updated: string;
+}
+
+export interface AuthOriginsCreate extends BaseCollectionCreate {
+	id: string;
+	collectionRef: string;
+	recordRef: string;
+	fingerprint: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface AuthOriginsUpdate extends BaseCollectionUpdate {
+	id?: string;
+	collectionRef?: string;
+	recordRef?: string;
+	fingerprint?: string;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface AuthOriginsCollection {
+	type: 'base';
+	collectionId: string;
+	collectionName: '_authOrigins';
+	response: AuthOriginsResponse;
+	create: AuthOriginsCreate;
+	update: AuthOriginsUpdate;
+	relations: Record<string, never>;
+}
+
+// ==== end of _authOrigins block =====
+
+// ==== start of _superusers block =====
+
+
+export interface SuperusersResponse extends AuthCollectionResponse {
+	collectionName: '_superusers';
+	id: string;
+	tokenKey: string;
+	email: string;
+	emailVisibility: boolean;
+	verified: boolean;
+	created: string;
+	updated: string;
+}
+
+export interface SuperusersCreate extends AuthCollectionCreate {
+	id: string;
+	password: string;
+	tokenKey: string;
+	email: string;
+	emailVisibility?: boolean;
+	verified?: boolean;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface SuperusersUpdate extends AuthCollectionUpdate {
+	id?: string;
+	tokenKey?: string;
+	email?: string;
+	emailVisibility?: boolean;
+	verified?: boolean;
+	created?: string | Date;
+	updated?: string | Date;
+}
+
+export interface SuperusersCollection {
+	type: 'auth';
+	collectionId: string;
+	collectionName: '_superusers';
+	response: SuperusersResponse;
+	create: SuperusersCreate;
+	update: SuperusersUpdate;
+	relations: Record<string, never>;
+}
+
+// ==== end of _superusers block =====
+
+// ==== start of users block =====
+
 
 export interface UsersResponse extends AuthCollectionResponse {
 	collectionName: 'users';
+	id: string;
+	tokenKey: string;
+	email: string;
+	emailVisibility: boolean;
+	verified: boolean;
 	name: string;
 	avatar: string;
+	created: string;
+	updated: string;
 }
 
 export interface UsersCreate extends AuthCollectionCreate {
+	id: string;
+	password: string;
+	tokenKey: string;
+	email: string;
+	emailVisibility?: boolean;
+	verified?: boolean;
 	name?: string;
-	avatar?: File;
+	avatar?: File | null;
+	created?: string | Date;
+	updated?: string | Date;
 }
 
 export interface UsersUpdate extends AuthCollectionUpdate {
+	id?: string;
+	tokenKey?: string;
+	email?: string;
+	emailVisibility?: boolean;
+	verified?: boolean;
 	name?: string;
-	avatar?: File;
+	avatar?: File | null;
+	created?: string | Date;
+	updated?: string | Date;
 }
 
 export interface UsersCollection {
@@ -158,10 +404,9 @@ export interface UsersCollection {
 	response: UsersResponse;
 	create: UsersCreate;
 	update: UsersUpdate;
-	relations: {
-		'posts(owner)': PostsCollection;
-	};
+	relations: Record<string, never>;
 }
+
 
 // ===== test2 =====
 
@@ -298,4 +543,9 @@ export type Schema = {
 	test2: Test2Collection;
 	test: TestCollection;
 	posts: PostsCollection;
+	_mfas: MfasCollection;
+	_otps: OtpsCollection;
+	_externalAuths: ExternalAuthsCollection;
+	_authOrigins: AuthOriginsCollection;
+	_superusers: SuperusersCollection;
 };

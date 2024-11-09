@@ -22,13 +22,13 @@ Add types to the [PocketBase JavaScript SDK](https://github.com/pocketbase/js-sd
 
 ```bash
 # npm
-npm i @tigawann/typed-pocketbase
+npm i @tigawanna/typed-pocketbase
 
 # pnpm
-pnpm i @tigawann/typed-pocketbase
+pnpm i @tigawanna/typed-pocketbase
 
 # yarn
-yarn add @tigawann/typed-pocketbase
+yarn add @tigawanna/typed-pocketbase
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ yarn add @tigawann/typed-pocketbase
 Generate the types:
 
 ```bash
-npx typed-pocketbase --email admin@mail.com --password supersecretpassword -d src/lib/pb
+npx typed-pocketbase --email admin@mail.com --password supersecretpassword -d src/lib/pb -f auth,posts
 ```
 
 The codegen tool will look for `POCKETBASE_EMAIL` and `POCKETBASE_PASSWORD` environment variables if the email or password are not passed using cli options.
@@ -48,7 +48,7 @@ Create a PocketBase client:
 
 ```ts
 import PocketBase from 'pocketbase';
-import { TypedPocketBase } from 'typed-pocketbase';
+import { TypedPocketBase } from '@tigawanna/typed-pocketbase';
 import { Schema } from './Database';
 
 const db = new TypedPocketBase<Schema>('http://localhost:8090');
@@ -57,7 +57,7 @@ const db = new TypedPocketBase<Schema>('http://localhost:8090');
 Enjoy full type-safety:
 
 ```ts
-import { neq } from 'typed-pocketbase';
+import { neq } from '@tigawanna/typed-pocketbase';
 
 db.from('posts').getFullList({
 	select: {
@@ -94,7 +94,7 @@ db.from('posts').getFullList({
 Use the `and`, `or` and other utility functions to filter rows:
 
 ```ts
-import { and, or, eq, gte, lt } from 'typed-pocketbase';
+import { and, or, eq, gte, lt } from '@tigawanna/typed-pocketbase';
 
 // get all posts created in 2022
 db.from('posts').getFullList({
@@ -165,7 +165,7 @@ db.from('posts').getFullList({
 > [!NOTE] 
 > Switeched the indirect expand synta from `comments(posts)` -> `comments_via_post` 
 
-In `typed-pocketbase` expanding happens automatically when using select.
+In `@tigawanna/typed-pocketbase` expanding happens automatically when using select.
 
 ```ts
 db.from('posts').getFullList({

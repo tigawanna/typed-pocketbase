@@ -69,7 +69,7 @@ sade(PKG_NAME, true)
 					DEFAULT_PB_FILES_DIR,
 					'custom-pb-types.ts'
 				);
-				const { text_output } = await filterByCollection(raw_typed_pb_types);
+				const { text_output } = await filterByCollection(raw_typed_pb_types, filter);
 
 				const custom_db_types_string =
 					await readOrCreateFile(CUSTOM_PB_TYPES_PATH);
@@ -86,8 +86,12 @@ sade(PKG_NAME, true)
 					extracted_custom_db_types,
 					extracted_custom_db_types_array
 				});
+				// console.log('final_db_types', final_db_types.slice(filter.length-200));
 
 				await writeFile(PB_TYPES_PATH, final_db_types, 'utf-8');
+				console.log(`Generated types for PocketBase at ${PB_TYPES_PATH}`);
+				console.log(" ====>", final_db_types.split("// ===== Schema =====")[1])
+
 			} else {
 				console.log(raw_typed_pb_types);
 			}
