@@ -1,6 +1,6 @@
 {
 	"name": "@tigawanna/typed-pocketbase",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"description": "Add types to the PocketBase JavaScript SDK",
 	"author": "Tigawanna",
 	"repository": {
@@ -20,16 +20,15 @@
 	"main": "./dist/client/index.js",
 	"module": "./dist/client/index.js",
 	"types": "./dist/client/index.d.ts",
-	"bin": {
-		"typed-pocketbase": "dist/codegen/cli.js"
-	},
+	"bin": "dist/codegen/cli.js",
 	"scripts": {
 		"build": "tsup",
 		"lint": "tsc",
 		"test": "vitest",
 		"format": "prettier --write .",
 		"ci:version": "changeset version",
-		"ci:release": "changeset publish"
+		"ci:release": "changeset publish",
+		"publish": "changeset publish --no-git-checks"
 	},
 	"peerDependencies": {
 		"pocketbase": "^0.22.0-rc"
