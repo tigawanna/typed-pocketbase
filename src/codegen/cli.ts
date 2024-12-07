@@ -1,7 +1,7 @@
 import sade from 'sade';
 import { generateTypes } from './index.js';
-import { mkdir, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import {  writeFile } from 'node:fs/promises';
+import {  resolve } from 'node:path';
 import { checkAndCreateNestsedDir, readOrCreateFile } from './utils/fs.js';
 import {
 	getCustomTypes,

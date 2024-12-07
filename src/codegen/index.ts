@@ -9,6 +9,8 @@ export async function generateTypes({ url, email, password }: GenerateOptions) {
 	await pb.collection('_superusers').authWithPassword(email, password);
 	const collections = await pb.collections.getFullList<Collection>();
 	const definitions = buildCollectionDefinitions(collections);
+	// console.log("definitions   ================== > ", definitions[0].columns.create.join("\n"));
+	// console.log("definitions   ================== > ", definitions[0].columns.update.join("\n"));
 	const definition = getFinalTemplate(definitions);
 	return definition;
 }

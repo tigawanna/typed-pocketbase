@@ -2,6 +2,7 @@ import { Collection } from "../types.js";
 import { CollectionDefinition, Columns, Relation } from "./util-types.js";
 import { getFieldType, parseIndex } from "./field-helpers.js";
 import { pascalCase } from "./general-helpers.js";
+import { log } from "console";
 
 export function createCollectionTypes({
 	name,
@@ -82,8 +83,9 @@ export function buildCollectionDefinitions(collections: Collection[]) {
 		const relations: Relation[] = [];
 
 		for (const field of collection.fields) {
+			// console.log(" === columns before getFieldType ==== ",columns);
 			getFieldType(field, columns);
-
+			// console.log(" === columns after getFieldType ==== ",columns);
 			if (field.type === 'relation') {
 				deferred.push(() => {
 					const from = definitions.get(collection.id);
