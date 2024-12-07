@@ -1,25 +1,33 @@
-import { CollectionField } from "pocketbase";
-import { Columns } from "./util-types.js";
+import { CollectionField } from 'pocketbase';
+import { Columns } from './util-types.js';
 
-export function getFieldType(field: CollectionField,{ response, create, update }: Columns) {
-	const addResponse = (type: string, name = field.name) =>
-		response.push(`${name}: ${type};`);
-	const addCreate = (type: string, name = field.name) =>{
-		if(field.name==="id"){
-			create.push(`${name}?: ${type};`);
-		}else{
-			create.push(`${name}${field.required ? '' : '?'}: ${type};`);
-
+export function getFieldType(
+	field: CollectionField,
+	{ response, create, update }: Columns
+) {
+	const addResponse = (type: string, name = field.name) => {
+		if (!field.hidden) {
+			response.push(`${name}: ${type};`);
 		}
-	}
-	const addUpdate = (type: string, name = field.name) =>{
-		if(field.name==="id"){
-			update.push(`${name}: ${type};`);
-		}else{
-			update.push(`${name}${field.required ? '' : '?'}: ${type};`);
+	};
+	const addCreate = (type: string, name = field.name) => {
+		if (!field.hidden) {
+			if (field.name === 'id') {
+				create.push(`${name}?: ${type};`);
+			} else {
+				create.push(`${name}${field.required ? '' : '?'}: ${type};`);
+			}
 		}
-
-	}
+	};
+	const addUpdate = (type: string, name = field.name) => {
+		if (!field.hidden) {
+			if (field.name === 'id') {
+				update.push(`${name}: ${type};`);
+			} else {
+				update.push(`${name}${field.required ? '' : '?'}: ${type};`);
+			}
+		}
+	};
 	const addAll = (type: string) => {
 		addResponse(type);
 		addCreate(type);
