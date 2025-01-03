@@ -5,6 +5,10 @@ export function getFieldType(
 	field: CollectionField,
 	{ response, create, update }: Columns
 ) {
+	// console.log("field ====> ", field);
+	// console.log("response ====> ", response);
+	// console.log("create ====> ", create);
+	// console.log("update ====> ", update);
 	const addResponse = (type: string, name = field.name) => {
 		if (!field.hidden) {
 			response.push(`${name}: ${type};`);
@@ -23,6 +27,8 @@ export function getFieldType(
 		if (!field.hidden) {
 			if (field.name === 'id') {
 				update.push(`${name}: ${type};`);
+			} else if (name.endsWith("+'") || name.endsWith("-'")) {
+				update.push(`${name}?: ${type};`);
 			} else {
 				update.push(`${name}${field.required ? '' : '?'}: ${type};`);
 			}
@@ -112,7 +118,7 @@ export function getFieldType(
 		}
 		case 'file': {
 			const single = field.maxSelect === 1;
-			addResponse(single ? 'string' : `Array<string>`);
+			addResponse(single ? 'string' : `MaybeArray<string>`);
 			addCreate(single ? `File | null` : `MaybeArray<File>`);
 			addUpdate(single ? `File | null` : `MaybeArray<File>`);
 			if (!single) {

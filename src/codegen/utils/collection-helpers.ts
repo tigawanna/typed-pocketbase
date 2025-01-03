@@ -83,8 +83,16 @@ export function buildCollectionDefinitions(collections: Collection[]) {
 		const relations: Relation[] = [];
 
 		for (const field of collection.fields) {
-			// console.log(" === columns before getFieldType ==== ",columns);
+			console.log(" === columns before getFieldType ==== ",collection.name);
+			console.log(" == columns update === ",columns.update);
 			getFieldType(field, columns);
+			if (
+				collection.type === 'auth' &&
+				!columns.response.includes('tokenKey: string;')
+			) {
+				columns.response.push('tokenKey: string;');
+			}
+		
 			// console.log(" === columns after getFieldType ==== ",columns);
 			if (field.type === 'relation') {
 				deferred.push(() => {

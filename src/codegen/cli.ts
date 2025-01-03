@@ -9,6 +9,7 @@ import {
 } from './modiiers/custom-type-generation.js';
 import { filterByCollection } from './modiiers/filter-collections.js';
 
+
 interface CliOptions {
 	url?: string;
 	email?: string;
