@@ -44,7 +44,7 @@ export class TypedPocketBase<Schema extends GenericSchema> extends PocketBase {
 	 *
 	 * Only works for `auth` collections.
 	 *
-	 * @param name - The name of the collection.
+	 * @param collectionName - The collection name of the collection.
 	 * @param recordId - The id of the record to impersonate.
 	 * @param duration - The amount of milliseconds to impersonate for.
 	 * @param options - Additional options to pass to the underlying `impersonate` method.
@@ -55,19 +55,23 @@ export class TypedPocketBase<Schema extends GenericSchema> extends PocketBase {
 		CollectionName extends keyof Schema,
 		Collection extends GenericCollection = Schema[CollectionName]
 	>(
-		name: CollectionName,
+		collectionName: CollectionName,
 		recordId: string,
 		duration: number,
 		options?: CommonOptions
 	): Collection['type'] extends 'auth'
-		? Promise<TypedPocketBase<Schema>>
+		? Promise<Omit<TypedPocketBase<Schema>, 'impersonate'>>
 		: Promise<never> {
-		return this.collection(name as string).impersonate(
-			recordId,
-			duration,
-			options
-		) as Collection['type'] extends 'auth'
-			? Promise<TypedPocketBase<Schema>>
+		return this.collection(collectionName as string)
+			.impersonate(recordId, duration, options)
+			.then((client) => {
+				const typedClient = this;
+				Object.assign(typedClient, client);
+				delete (typedClient as any).impersonate;
+				return typedClient;
+			}) as Collection['type'] extends 'auth'
+			? Promise<Omit<TypedPocketBase<Schema>, 'impersonate'>>
 			: Promise<never>;
 	}
+	
 }

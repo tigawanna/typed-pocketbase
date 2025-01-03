@@ -1,6 +1,5 @@
 import { BatchService, SendOptions, BatchRequestResult, SubBatchService, RecordOptions } from "pocketbase";
 import { TypedPocketBase } from "../client.js";
-import { SelectWithExpand } from "../select.js";
 import { GenericSchema, GenericCollection } from "../types.js";
 
 export class TypedBatch<Schema extends GenericSchema> {

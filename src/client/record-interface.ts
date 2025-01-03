@@ -16,9 +16,7 @@ import {
 	BaseRecord,
 	RecordWithExpandToDotPath,
 	MaybeArray,
-	GenericSchema
 } from '../types.js';
-import { TypedPocketBase } from '../client.js';
 
 export const FORWARD_METHODS = [
 	'unsubscribe',

@@ -2,7 +2,7 @@ import { config as dotenvConfig } from "dotenv";
 dotenvConfig();
 import { generateTypes } from "../codegen/index.js";
 import { filterByCollection } from "../codegen/modiiers/filter-collections.js";
-import { modifyAndInjectCustomSTypes } from "../codegen/modiiers/custom-type-generation.js";
+
 
 export async function callCliDirectly() {
   const url = process.env.VITE_PB_URL;
