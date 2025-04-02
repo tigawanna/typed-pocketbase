@@ -1,6 +1,6 @@
 {
 	"name": "@tigawanna/typed-pocketbase",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "Add types to the PocketBase JavaScript SDK",
 	"author": "Tigawanna",
 	"repository": {
@@ -29,18 +29,16 @@
 		"ci:version": "changeset version",
 		"ci:release": "changeset publish",
 		"release": "changeset publish --no-git-checks",
-	"check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm"
-
+		"check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm"
 	},
-
 	"dependencies": {
 		"sade": "^1.8.1"
 	},
 	"peerDependencies": {
-	"pocketbase": ">=0.23.0 <0.27.0"
+		"pocketbase": ">=0.23.0 <0.27.0"
 	},
 	"devDependencies": {
-			"@arethetypeswrong/cli": "^0.17.0",
+		"@arethetypeswrong/cli": "^0.17.0",
 		"@changesets/cli": "^2.27.1",
 		"@types/node": "^20.11.13",
 		"dotenv": "^16.4.5",
