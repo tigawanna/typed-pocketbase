@@ -32,7 +32,7 @@
 		"check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm"
 	},
 	"dependencies": {
-		"sade": "^1.8.1"
+		"commander": "^13.1.0"
 	},
 	"peerDependencies": {
 		"pocketbase": ">=0.23.0 <0.27.0"
