@@ -23,11 +23,10 @@ sade(PKG_NAME, true)
 	.describe('Generate types for the PocketBase JavaScript SDK')
 	.option(
 		'-u, --url',
-		'URL to your hosted pocketbase instance.',
-		'http://127.0.0.1:8090'
+		'URL to your hosted pocketbase instance.'
 	)
 	.option('-e, --email', 'email for an admin pocketbase user.')
-	.option('-p, --password', 'email for an admin pocketbase user.')
+	.option('-p, --password', 'password for an admin pocketbase user.')
 	.option(
 		'-d, --dir',
 		'directory path to save the typescript (dir/pb-types.ts,dir/custom-pb-types.ts) will be created under that dir'
@@ -35,13 +34,24 @@ sade(PKG_NAME, true)
 	.option('-f, --filter', 'only generate types from specified collection')
 	.action(
 		async ({
-			url,
+			url="http://127.0.0.1:8090",
 			email = process.env.POCKETBASE_EMAIL,
 			password = process.env.POCKETBASE_PASSWORD,
 			dir,
 			filter = ''
 		}: CliOptions) => {
-			if (!url) error(`required option '-u, --url' not specified`);
+			console.log({
+				url,
+				email,
+				password,
+				dir,
+				filter
+			})
+				
+			if (!url){
+				console.log("url", url)
+				error(`required option '-u, --url' not specified`);
+			} 
 
 			if (!email)
 				error(
