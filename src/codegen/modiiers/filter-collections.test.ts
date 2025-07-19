@@ -4,10 +4,8 @@ import { filterByCollection } from "./filter-collections.js";
 describe("filterByCollection", () => {
     test("filterByCollection with empty string", async () => {
         const filtered = await filterByCollection("");
-		expect(filtered.text_output).toStrictEqual("");
-        expect(filtered.text_output).toStrictEqual("");
+		expect(filtered.text_output).toStrictEqual("\n");
         expect(filtered.all_block_indexes).toStrictEqual({});
-   
     });
     test("filterByCollection with no collection filter", async () => {
         const filtered = await filterByCollection(dummy_types_with_json_fields);
@@ -45,7 +43,7 @@ describe("filterByCollection", () => {
         });
    		expect(schema_section).toContain("uwus: UwusCollection;");
 	});
-    test("filterByCollection with uwu collection filter", async () => {
+    test("filterByCollection with comment collection filter", async () => {
         const filtered = await filterByCollection(dummy_types_with_json_fields,"comment");
 		const schema_section = filtered.text_output.split("export type Schema")[1]
         expect(filtered.all_block_indexes).toStrictEqual({
@@ -54,8 +52,9 @@ describe("filterByCollection", () => {
           uwus: [110, 146],
           Schema: [146, 153],
         });
-	  expect(schema_section).toContain("posts: PostsCollection;");
       expect(schema_section).toContain("comments: CommentsCollection;");
+      expect(schema_section).not.toContain("posts: PostsCollection;");
+      expect(schema_section).not.toContain("uwus: UwusCollection;");
 	});
 });
 

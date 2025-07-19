@@ -24,7 +24,7 @@
 	"scripts": {
 		"build": "tsup",
 		"lint": "tsc",
-		"test": "vitest",
+		"test": "vitest run",
 		"format": "prettier --write .",
 		"ci:version": "changeset version",
 		"ci:release": "changeset publish",
@@ -41,6 +41,7 @@
 		"@arethetypeswrong/cli": "^0.17.0",
 		"@changesets/cli": "^2.27.1",
 		"@types/node": "^24.0.15",
+		"@vitest/coverage-v8": "3.2.4",
 		"dotenv": "^17.2.0",
 		"pocketbase": "^0.26.1",
 		"prettier": "^3.6.2",
