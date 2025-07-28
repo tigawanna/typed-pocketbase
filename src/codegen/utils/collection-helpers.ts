@@ -2,7 +2,7 @@ import { Collection } from "../types.js";
 import { CollectionDefinition, Columns, Relation } from "./util-types.js";
 import { getFieldType, parseIndex } from "./field-helpers.js";
 import { pascalCase } from "./general-helpers.js";
-import { log } from "console";
+
 
 export function createCollectionTypes({
 	name,

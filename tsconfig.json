@@ -9,6 +9,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
 		"esModuleInterop": true,
+		"noErrorTruncation": true,
 		"noEmit": true
 	},
 	"include": ["src"],

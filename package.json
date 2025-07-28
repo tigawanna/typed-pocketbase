@@ -29,7 +29,8 @@
 		"ci:version": "changeset version",
 		"ci:release": "changeset publish",
 		"release": "changeset publish --no-git-checks",
-		"check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm"
+		"check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
+		"pb-types": "tsx sample/typegen.ts"
 	},
 	"dependencies": {
 		"commander": "^13.1.0"
@@ -46,6 +47,7 @@
 		"pocketbase": "^0.26.1",
 		"prettier": "^3.6.2",
 		"tsup": "^8.5.0",
+		"tsx": "^4.20.3",
 		"typescript": "^5.8.3",
 		"vitest": "^3.2.4"
 	}

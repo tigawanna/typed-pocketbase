@@ -85,7 +85,7 @@ export function getFieldType(
 				maxSelect: number;
 				values: string[];
 			};
-			const single = selectField.maxSelect === 1;
+			const single = selectField.maxSelect === 1 || selectField.maxSelect === 0;
 			const values =
 				!selectField.required && single
 					? ['', ...selectField.values]
@@ -105,7 +105,7 @@ export function getFieldType(
 		}
 		case 'relation': {
 			const singleType = 'string';
-			const single = field.maxSelect === 1;
+			const single = field.maxSelect === 1 || field.maxSelect === 0;
 			const type = single ? singleType : `MaybeArray<${singleType}>`;
 			addResponse(single ? singleType : `Array<${singleType}>`);
 			addCreate(type);
@@ -117,7 +117,7 @@ export function getFieldType(
 			break;
 		}
 		case 'file': {
-			const single = field.maxSelect === 1;
+			const single = field.maxSelect === 1 || field.maxSelect === 0;
 			addResponse(single ? 'string' : `MaybeArray<string>`);
 			addCreate(single ? `File | null` : `MaybeArray<File>`);
 			addUpdate(single ? `File | null` : `MaybeArray<File>`);
