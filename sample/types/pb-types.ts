@@ -144,7 +144,6 @@ export interface ViewCollectionRecord {
 
 type MaybeArray<T> = T | T[];
 
-// ===== _mfas block =====
 // ===== _mfas =====
 
 export interface MfasResponse extends BaseCollectionResponse {
@@ -185,7 +184,6 @@ export interface MfasCollection {
 	relations: Record<string, never>;
 }
 
-// ===== _otps block =====
 // ===== _otps =====
 
 export interface OtpsResponse extends BaseCollectionResponse {
@@ -223,7 +221,6 @@ export interface OtpsCollection {
 	relations: Record<string, never>;
 }
 
-// ===== _externalAuths block =====
 // ===== _externalAuths =====
 
 export interface ExternalAuthsResponse extends BaseCollectionResponse {
@@ -267,7 +264,6 @@ export interface ExternalAuthsCollection {
 	relations: Record<string, never>;
 }
 
-// ===== _authOrigins block =====
 // ===== _authOrigins =====
 
 export interface AuthOriginsResponse extends BaseCollectionResponse {
@@ -308,7 +304,6 @@ export interface AuthOriginsCollection {
 	relations: Record<string, never>;
 }
 
-// ===== _superusers block =====
 // ===== _superusers =====
 
 export interface SuperusersResponse extends AuthCollectionResponse {
@@ -350,7 +345,6 @@ export interface SuperusersCollection {
 	relations: Record<string, never>;
 }
 
-// ===== users block =====
 // ===== users =====
 
 export interface UsersResponse extends AuthCollectionResponse {
@@ -411,7 +405,6 @@ export interface UsersCollection {
 	};
 }
 
-// ===== _secrets block =====
 // ===== _secrets =====
 
 export interface SecretsResponse extends BaseCollectionResponse {
@@ -449,7 +442,6 @@ export interface SecretsCollection {
 	relations: Record<string, never>;
 }
 
-// ===== watchlist block =====
 // ===== watchlist =====
 
 export interface WatchlistResponse extends BaseCollectionResponse {
@@ -504,7 +496,6 @@ export interface WatchlistCollection {
 	};
 }
 
-// ===== watchlist_likes block =====
 // ===== watchlist_likes =====
 
 export interface WatchlistLikesResponse extends BaseCollectionResponse {
@@ -545,7 +536,6 @@ export interface WatchlistLikesCollection {
 	};
 }
 
-// ===== watchlist_items block =====
 // ===== watchlist_items =====
 
 export interface WatchlistItemsResponse extends BaseCollectionResponse {
@@ -624,7 +614,6 @@ export interface WatchlistItemsCollection {
 	};
 }
 
-// ===== watched_list block =====
 // ===== watched_list =====
 
 export interface WatchedListResponse extends BaseCollectionResponse {
@@ -672,7 +661,6 @@ export interface WatchedListCollection {
 	};
 }
 
-// ===== follows block =====
 // ===== follows =====
 
 export interface FollowsResponse extends BaseCollectionResponse {
@@ -716,7 +704,6 @@ export interface FollowsCollection {
 	};
 }
 
-// ===== user_profiles block =====
 // ===== user_profiles =====
 
 export interface UserProfilesResponse extends BaseCollectionResponse {
@@ -780,7 +767,6 @@ export interface UserProfilesCollection {
 	};
 }
 
-// ===== notifications block =====
 // ===== notifications =====
 
 export interface NotificationsResponse extends BaseCollectionResponse {
@@ -850,4 +836,4 @@ export type Schema = {
 	follows: FollowsCollection;
 	user_profiles: UserProfilesCollection;
 	notifications: NotificationsCollection;
-}
+};

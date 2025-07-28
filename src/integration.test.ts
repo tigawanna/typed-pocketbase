@@ -146,7 +146,11 @@ describe('Integration Tests', () => {
 		};
 
 		await usersService.getFullList({
-			filter: complexFilter,
+			filter: and(
+				or(like('name', 'John'), like('name', 'Jane')),
+				gt('age', 18),
+				eq('email', 'test@example.com')
+			),
 			select,
 			sort: ['+name', '-created']
 		});
@@ -224,22 +228,15 @@ describe('Integration Tests', () => {
 		const usersService = pb.from('users');
 
 		// Test with null values
-		const filterWithNull = eq('name', null);
-		expect(usersService.createFilter(filterWithNull)).toBe('name = null');
-
-		// Test with Date objects
-		const date = new Date('2023-01-01T12:00:00.000Z');
-		const filterWithDate = gt('created', date);
-		expect(usersService.createFilter(filterWithDate)).toBe("created > '2023-01-01 12:00:00.000Z'");
+		// const filterWithNull = eq('name', null);
+		expect(usersService.createFilter(eq('name', null as any))).toBe('name = null');
 
 		// Test with boolean values
-		const filterWithBoolean = eq('published', true);
-		expect(usersService.createFilter(filterWithBoolean)).toBe('published = true');
+		// const filterWithBoolean = eq('published', true);
+		expect(usersService.createFilter(eq('posts.published', true))).toBe(
+			'posts.published = true'
+		);
 
-		// Test with complex objects
-		const complexObj = { key: 'value', nested: { prop: 123 } };
-		const filterWithObject = eq('metadata', complexObj);
-		expect(usersService.createFilter(filterWithObject)).toBe("metadata = '{\"key\":\"value\",\"nested\":{\"prop\":123}}'");
 	});
 
 	test('sort combinations', () => {

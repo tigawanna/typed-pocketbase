@@ -19,7 +19,7 @@ export async function loadCollectionSchema() {
 function runFunction() {
     loadCollectionSchema()
         .then((res) => {
-            filterByCollection(res, "buff").then((res) => {
+            filterByCollection(res.types, "buff").then((res) => {
                 const finalTypes = modifyAndInjectCustomSTypes({
                     content: res.text_output,
                     extracted_custom_db_types: "",

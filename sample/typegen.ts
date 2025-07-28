@@ -46,7 +46,9 @@ export async function callCliDirectly() {
 		'--email',
 		email,
 		'--password',
-		password
+		password,
+    "--type",
+    'zod,ts',
 	];
   if (url && url.length > 0) {
     commands.push("--url", url);

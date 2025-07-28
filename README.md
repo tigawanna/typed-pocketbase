@@ -4,19 +4,21 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/tigawanna/typed-pocketbase)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/tigawanna/typed-pocketbase/main.yaml?branch=main)
 
-Add types to the [PocketBase JavaScript SDK](https://github.com/pocketbase/js-sdk).
+Add types and **Zod runtime validation** to the [PocketBase JavaScript SDK](https://github.com/pocketbase/js-sdk).
 
 > [!WARNING] 
-> This is a fork only compatible with the latest version of the PocketBase JavaScript SDK (v0.22) with the pocketbase 0,23 rc
+> This is a fork only compatible with the latest version of the PocketBase JavaScript SDK (v0.22) with PocketBase 0.23 RC
  
-> [!NOTE] 
-> Extra features include 
-> - filtering collections to generate types for woth the -f flag
-> - custom types (especially for JSON fields) that won't be over written on new type generation
-> - supprot from the otp APIs
-> - support ro the batch APIs 
+## ✨ Features
 
-
+- 🎯 **TypeScript Types** - Full type safety for PocketBase collections
+- 🛡️ **Zod Runtime Validation** - Validate data at runtime with Zod v4
+- 🎨 **Pattern Filtering** - Control which collections to include/exclude
+- 🔒 **Security** - Exclude sensitive collections from public APIs
+- ⚡ **Performance** - Tree-shakable schemas and optimized validation
+- 🛠️ **Custom Types** - JSON field types that won't be overwritten
+- 📦 **Batch APIs** - Support for batch operations
+- 🔐 **OTP & Impersonation** - Support for OTP and user impersonation APIs
 
 ## Installation
 
@@ -31,51 +33,165 @@ pnpm i @tigawanna/typed-pocketbase
 yarn add @tigawanna/typed-pocketbase
 ```
 
-## Usage
+## Quick Start
 
-> [!WARNING]
-> the -o flag was removed in favour of the -d flag that lets you specify where the main (`pb-types.ts`) and custom types (`custom-types.ts`) will go
-
-Generate the types:
+### 1. Generate Types & Schemas
 
 ```bash
-npx typed-pocketbase --email admin@mail.com --password supersecretpassword -d src/lib/pb -f auth,posts
+# Generate both TypeScript types and Zod schemas
+npx typed-pocketbase \
+  --email admin@example.com \
+  --password supersecret \
+  --type ts,zod \
+  --dir src/lib/pb
+
+# Generate only Zod schemas
+npx typed-pocketbase \
+  --email admin@example.com \
+  --password supersecret \
+  --type zod \
+  --dir src/lib/pb
+
+# With pattern filtering (exclude system collections)
+npx typed-pocketbase \
+  --email admin@example.com \
+  --password supersecret \
+  --type zod \
+  --ignore "^_.*" \
+  --dir src/lib/pb
 ```
 
-The codegen tool will look for `POCKETBASE_EMAIL` and `POCKETBASE_PASSWORD` environment variables if the email or password are not passed using cli options.
-
-Create a PocketBase client:
+### 2. Use Generated Types & Schemas
 
 ```ts
 import PocketBase from 'pocketbase';
 import { TypedPocketBase } from '@tigawanna/typed-pocketbase';
-import { Schema } from './Database';
+import { Schema } from './pb/pb-types';
+import { WatchlistCreateSchema, watchlistValidators } from './pb/pb-zod';
 
+// Create typed client
 const db = new TypedPocketBase<Schema>('http://localhost:8090');
+
+// Runtime validation with Zod
+const createData = WatchlistCreateSchema.parse({
+  title: 'My Movies',
+  user_id: 'user123',
+  visibility: 'public'
+});
+
+// Safe validation with error handling
+const result = watchlistValidators.safeCreate(formData);
+if (result.success) {
+  const record = await db.collection('watchlist').create(result.data);
+} else {
+  console.error('Validation errors:', result.error.issues);
+}
 ```
 
-Enjoy full type-safety:
+## CLI Options
+
+| Option       | Short | Description             | Default                 | Example                         |
+| ------------ | ----- | ----------------------- | ----------------------- | ------------------------------- |
+| `--url`      | `-u`  | PocketBase instance URL | `http://127.0.0.1:8090` | `--url http://localhost:8090`   |
+| `--email`    | `-e`  | Admin email             | `$POCKETBASE_EMAIL`     | `--email admin@example.com`     |
+| `--password` | `-p`  | Admin password          | `$POCKETBASE_PASSWORD`  | `--password admin123`           |
+| `--dir`      | `-d`  | Output directory        | -                       | `--dir ./types`                 |
+| `--type`     | `-t`  | Output type             | `ts`                    | `--type ts,zod`                 |
+| `--ignore`   | -     | Ignore pattern (regex)  | -                       | `--ignore "^_.*"`               |
+| `--include`  | -     | Include pattern (regex) | -                       | `--include "^(users\|posts).*"` |
+| `--filter`   | `-f`  | Filter by collection    | -                       | `--filter users`                |
+
+### Type Options
+- `ts` - Generate TypeScript types only
+- `zod` - Generate Zod schemas only  
+- `ts,zod` - Generate both TypeScript types and Zod schemas
+
+## Pattern Filtering
+
+Control which collections get schemas generated using regex patterns:
+
+> [!WARNING]
+> **Collection Dependencies**: When using `--include` or `--ignore` patterns, ensure that excluded collections are not referenced by included collections through relations. If Collection A has a relation field pointing to Collection B, and you exclude Collection B while including Collection A, the type generation will fail because it cannot resolve the relation target. Always include all collections that are referenced by the collections you want to generate.
+
+```bash
+# Only user-facing collections
+npx typed-pocketbase --include "^(users|posts|comments).*" --type zod --dir ./types
+
+# Exclude system collections (default behavior)
+npx typed-pocketbase --ignore "^_.*" --type zod --dir ./types
+
+# Include all collections
+npx typed-pocketbase --ignore "" --type zod --dir ./types
+
+# Combine patterns: include all but exclude secrets
+npx typed-pocketbase --include ".*" --ignore "^_secrets$" --type zod --dir ./types
+```
+
+## Zod Runtime Validation
+
+### Generated Schemas
+
+For each collection, the tool generates:
+
+- **Response Schema** - `{Collection}ResponseSchema` for API responses
+- **Create Schema** - `{Collection}CreateSchema` for create operations  
+- **Update Schema** - `{Collection}UpdateSchema` for update operations
+- **Validation Helpers** - `{collection}Validators` with safe parsing
+- **TypeScript Types** - Inferred from Zod schemas
+
+### Field Type Mappings
+
+| PocketBase Type | Zod Schema                                                             | Notes                            |
+| --------------- | ---------------------------------------------------------------------- | -------------------------------- |
+| `text`          | `z.string()`                                                           | With min/max/pattern validation  |
+| `email`         | `z.email()`                                                            | Email format validation (Zod v4) |
+| `url`           | `z.url()`                                                              | URL format validation (Zod v4)   |
+| `number`        | `z.number()`                                                           | With min/max validation          |
+| `bool`          | `z.boolean()`                                                          | Boolean validation               |
+| `date`          | `z.string()` / `z.union([z.string(), z.date()])`                       | Flexible date handling           |
+| `select`        | `z.enum([...])`                                                        | Enum with allowed values         |
+| `relation`      | `z.string()` / `z.array(z.string())`                                   | Single or multiple relations     |
+| `file`          | `z.instanceof(File)` / `z.string()`                                    | File handling                    |
+| `json`          | `z.union([z.record(z.string(), z.any()), z.array(z.any()), z.null()])` | Flexible JSON                    |
+
+### Validation Examples
 
 ```ts
-import { neq } from '@tigawanna/typed-pocketbase';
+import { z } from 'zod';
+import { PostCreateSchema, postValidators } from './pb/pb-zod';
 
-db.from('posts').getFullList({
-	select: {
-		id: true,
-		title: true,
-		content: true,
-		expand: {
-			owner: {
-				username: true
-			}
-		}
-	}
-	sort: '-date',
-	filter: neq('content', '')
+// Basic validation (throws on error)
+const validData = PostCreateSchema.parse({
+  title: 'My Post',
+  content: 'Hello world',
+  published: true
+});
+
+// Safe validation with error handling
+const result = postValidators.safeCreate(formData);
+if (result.success) {
+  console.log('Valid data:', result.data);
+  // Create record with validated data
+  const record = await db.collection('posts').create(result.data);
+} else {
+  console.error('Validation errors:');
+  result.error.issues.forEach(issue => {
+    console.log(`${issue.path.join('.')}: ${issue.message}`);
+  });
+}
+
+// Custom validation extensions
+const CustomPostSchema = PostCreateSchema.extend({
+  title: z.string().min(1, 'Title is required').max(100, 'Title too long')
+}).refine(data => data.title !== 'forbidden', {
+  message: 'This title is not allowed',
+  path: ['title']
 });
 ```
 
-## Selecting fields
+## TypedPocketBase Client
+
+### Selecting Fields
 
 ```ts
 const showId = Math.random() < 0.5;
@@ -89,83 +205,50 @@ db.from('posts').getFullList({
 });
 ```
 
-## Filtering columns
+### Filtering Columns
 
 Use the `and`, `or` and other utility functions to filter rows:
 
 ```ts
 import { and, or, eq, gte, lt } from '@tigawanna/typed-pocketbase';
 
-// get all posts created in 2022
+// Get all posts created in 2022
 db.from('posts').getFullList({
-	// a "manual" filter is a tuple of length 3
-	filter: and(['date', '<', '2023-01-01'], ['data', '>=', '2022-01-01'])
+	filter: and(['date', '<', '2023-01-01'], ['date', '>=', '2022-01-01'])
 });
 
-// get all posts expect for those created in 2022
-db.from('posts').getFullList({
-	filter: or(['date', '>=', '2023-01-01'], ['data', '<', '2022-01-01'])
-});
-
-// get all posts that were create at '2023-01-01'
-db.from('posts').getFullList({ filter: eq('date', '2023-01-01') });
-
-// combine or/and with helpers and manual filters
+// Combine filters with helpers
 db.from('posts').getFullList({
 	filter: or(
-		//
 		['date', '>=', '2023-01-01'],
 		lt('date', '2022-01-01')
 	)
 });
 
-// conditionally filter rows
-// falsy values are excluded
-db.from('posts').getFullList({
-	filter: and(
-		//
-		gte('date', '2022-01-01'),
-		!untilNow && lt('date', '2023-01-01')
-	)
-});
-
-// filter for columns in relations
-// works up to 6 levels deep, including the top level
+// Filter for columns in relations (up to 6 levels deep)
 db.from('posts').getFullList({
 	filter: eq('owner.name', 'me')
 });
 ```
 
-Most filter operators are available as short hand function.
-
-Visit the [pocketbase documentation](https://pocketbase.io/docs/api-records/) to find out about all filters in the `List/Search records` section.
-
-## Sorting rows
+### Sorting Rows
 
 ```ts
 db.from('posts').getFullList({
-	// sort by descending 'date'
+	// Sort by descending 'date'
 	sort: '-date'
 });
 
 db.from('posts').getFullList({
-	// sort by descending 'date' and ascending 'title'
+	// Sort by multiple fields
 	sort: ['-date', '+title']
-});
-
-// conditionally sort rows
-// falsy values are excluded
-db.from('posts').getFullList({
-	sort: ['-date', sortTitle && '+title']
 });
 ```
 
-## Expanding
+### Expanding Relations
 
 > [!NOTE] 
-> Switeched the indirect expand synta from `comments(posts)` -> `comments_via_post` 
-
-In `@tigawanna/typed-pocketbase` expanding happens automatically when using select.
+> Switched the indirect expand syntax from `comments(posts)` → `comments_via_post` 
 
 ```ts
 db.from('posts').getFullList({
@@ -177,21 +260,21 @@ db.from('posts').getFullList({
 	}
 });
 
-// select nested columns
+// Select nested columns
 db.from('posts').getFullList({
 	select: {
 		expand: {
 			user: {
-				name: true
+				name: true,
 				avatar: true
 			}
 		}
 	}
 });
 
-// nested expand
+// Nested expand
 db.from('posts').getFullList({
-	select:{
+	select: {
 		expand: {
 			user: {
 				expand: {
@@ -203,37 +286,24 @@ db.from('posts').getFullList({
 });
 ```
 
-[Back relation expanding](https://pocketbase.io/docs/working-with-relations/#back-relation-expand) is support aswell:
+### Batch APIs
 
 ```ts
-db.from('user').getFullList({
-	select: {
-		expand: {
-			'posts(user)': {
-				title: true,
-				created: true
-			}
-		}
-	}
-});
+const batch = db.fromBatch();
+batch.from("users").create({...});
+batch.from("users").upsert({...});
+await batch.send();
 ```
 
-### batch APIs
+### Impersonate Client
+
 ```ts
-    const batch = db.fromBatch()
-      batch.from("users").create({...});
-      batch.from("users").upsert({...});
-      await batch.send();
+const impersonateClient = await db.impersonate("_superusers", "user_id_being_impersonated", 20);
+impersonateClient.from("posts").create({...});
+impersonateClient.from("posts").update({...});
 ```
 
-### impersonate client
-```ts
-    const impersinateClient = await db.impersonate("_superusers","user_id_being_impersonated",20);
-    impersinateClient.from("posts").create({...});
-    impersinateClient.from("posts").update({...});
-```
-
-## Helper methods:
+## Helper Methods
 
 ### createSelect
 
@@ -242,8 +312,6 @@ const select = db.from('posts').createSelect({
 	id: true,
 	content: true,
 	owner: true,
-	collectionName: true,
-	asd: true,
 	expand: {
 		owner: {
 			username: true,
@@ -265,6 +333,44 @@ const filter = db
 
 ```ts
 const sort = db.from('posts').createSort('+id', '-date');
+```
+
+## Environment Variables
+
+Set environment variables to avoid passing credentials in commands:
+
+```bash
+export POCKETBASE_EMAIL=admin@example.com
+export POCKETBASE_PASSWORD=admin123
+
+# Now you can run without --email and --password
+npx typed-pocketbase --url http://localhost:8090 --type zod --dir ./types
+```
+
+## Best Practices
+
+1. **Always validate external data** - API responses, user input, etc.
+2. **Use safe parsing** for user-facing operations to handle errors gracefully
+3. **Validate at boundaries** - When data enters/exits your application
+4. **Regenerate schemas** when your PocketBase collections change
+5. **Use pattern filtering** for different environments (dev vs prod)
+
+## Programmatic API
+
+```ts
+import { generateTypes } from '@tigawanna/typed-pocketbase/codegen';
+
+const result = await generateTypes({
+  url: 'http://127.0.0.1:8090',
+  email: 'admin@example.com',
+  password: 'admin-password',
+  ignorePattern: '^_.*',
+  includePattern: '^(users|posts).*'
+});
+
+// Write generated files
+await fs.writeFile('pb-types.ts', result.types);
+await fs.writeFile('pb-zod.ts', result.zodSchemas);
 ```
 
 ## License

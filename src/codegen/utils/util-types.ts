@@ -5,6 +5,8 @@ export interface GenerateOptions {
 	email: string;
 	password: string;
 	out?: string;
+	ignorePattern?: string;
+	includePattern?: string;
 }
 
 export interface Columns {

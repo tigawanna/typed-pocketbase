@@ -20,7 +20,7 @@ callCliDirectly()
   .then((res) => {
     // console.log("types  ====> ", res.slice(2600));
     filterByCollection(
-      res,
+      res.types,
       "",
 	).then((res) => {
 		console.log("\n\n== filtered types == ",res.text_output.split("// ===== Schema =====")[1])
