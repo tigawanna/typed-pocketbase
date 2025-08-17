@@ -19,7 +19,7 @@ import { TypedPocketBase } from '../client.js';
 
 
 
-type TypedRecordServiceSchema = Omit<
+export type TypedRecordServiceSchema = Omit<
 	AuthCollectionService<GenericCollection>,
 	| 'unsubscribe'
 	| 'listAuthMethods'

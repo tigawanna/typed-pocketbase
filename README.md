@@ -7,7 +7,7 @@
 Add types and **Zod runtime validation** to the [PocketBase JavaScript SDK](https://github.com/pocketbase/js-sdk).
 
 > [!WARNING] 
-> This is a fork only compatible with the latest version of the PocketBase JavaScript SDK (v0.22) with PocketBase 0.23 RC
+> This is a fork only compatible with the latest version of the PocketBase JavaScript SDK (v0.22) with PocketBase 0.23+
  
 ## ✨ Features
 

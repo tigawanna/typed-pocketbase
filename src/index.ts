@@ -2,7 +2,7 @@ export type {
 	ResolveSelect,
 	ResolveSelectWithExpand,
 	Select,
-	SelectWithExpand
+	SelectWithExpand,
 } from './select.js';
 export {
 	and,
@@ -15,10 +15,10 @@ export {
 	lte,
 	neq,
 	nlike,
-	type Filter
+	type Filter,ActualFilter,FilterOperand,FilterParam
 } from './filter.js';
 export type { Sort } from './sort.js';
-export type { GenericSchema, GenericCollection, TypedRecord } from './types.js';
+export * from './types.js';
 export {
 	type AuthCollectionService,
 	type BaseCollectionService,

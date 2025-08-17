@@ -29,6 +29,7 @@
 		"ci:version": "changeset version",
 		"ci:release": "changeset publish",
 		"release": "changeset publish --no-git-checks",
+		"prerelease": "npm run build npm $$ run check-exports",
 		"check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
 		"pb-types": "tsx sample/typegen.ts"
 	},

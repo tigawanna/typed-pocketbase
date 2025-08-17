@@ -1,6 +1,6 @@
 import type { BaseRecord } from './types.js';
 
-type ActualFilter<T extends any, K extends keyof T = keyof T> = [
+export type ActualFilter<T extends any, K extends keyof T = keyof T> = [
 	K,
 	FilterOperand,
 	T[K]
