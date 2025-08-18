@@ -85,9 +85,9 @@ export const schemas = {
 ${definitions
 	.map(
 		(def) => `    ${def.name}: {
-        response: ${def.typeName}ResponseSchema,
-        ${def.type !== 'view' ? `create: ${def.typeName}CreateSchema,` : ''}
-        ${def.type !== 'view' ? `update: ${def.typeName}UpdateSchema,` : ''}
+        response: ${def.typeName}ResponseZodSchema,
+        ${def.type !== 'view' ? `create: ${def.typeName}CreateZodSchema,` : ''}
+        ${def.type !== 'view' ? `update: ${def.typeName}UpdateZodSchema,` : ''}
     },`
 	)
 	.join('\n')}
