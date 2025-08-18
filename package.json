@@ -1,6 +1,6 @@
 {
 	"name": "@tigawanna/typed-pocketbase",
-	"version": "0.1.2",
+	"version": "0.1.4",
 	"description": "Add types to the PocketBase JavaScript SDK",
 	"author": "Tigawanna",
 	"repository": {

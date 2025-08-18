@@ -85,9 +85,9 @@ export const schemas = {
 ${definitions
 	.map(
 		(def) => `    ${def.name}: {
-        response: ${def.typeName}ResponseSchema,
-        ${def.type !== 'view' ? `create: ${def.typeName}CreateSchema,` : ''}
-        ${def.type !== 'view' ? `update: ${def.typeName}UpdateSchema,` : ''}
+        response: ${def.typeName}ResponseZodSchema,
+        ${def.type !== 'view' ? `create: ${def.typeName}CreateZodSchema,` : ''}
+        ${def.type !== 'view' ? `update: ${def.typeName}UpdateZodSchema,` : ''}
     },`
 	)
 	.join('\n')}
@@ -118,7 +118,7 @@ function createCollectionZodSchemas(
 
 	// Response schema
 	const responseFields = getZodFieldsForType(collection, 'response');
-	schemas += `\n\nexport const ${typeName}ResponseSchema = ${baseSchema}.extend({
+	schemas += `\n\nexport const ${typeName}ResponseZodSchema = ${baseSchema}.extend({
     collectionName: z.literal('${name}'),
 ${responseFields.map((field) => `    ${field}`).join(',\n')}
 });`;
@@ -126,13 +126,13 @@ ${responseFields.map((field) => `    ${field}`).join(',\n')}
 	if (type !== 'view') {
 		// Create schema
 		const createFields = getZodFieldsForType(collection, 'create');
-		schemas += `\n\nexport const ${typeName}CreateSchema = ${baseCreateSchema}.extend({
+		schemas += `\n\nexport const ${typeName}CreateZodSchema = ${baseCreateSchema}.extend({
 ${createFields.map((field) => `    ${field}`).join(',\n')}
 });`;
 
 		// Update schema
 		const updateFields = getZodFieldsForType(collection, 'update');
-		schemas += `\n\nexport const ${typeName}UpdateSchema = ${baseUpdateSchema}.extend({
+		schemas += `\n\nexport const ${typeName}UpdateZodSchema = ${baseUpdateSchema}.extend({
 ${updateFields.map((field) => `    ${field}`).join(',\n')}
 });`;
 	}
@@ -162,7 +162,10 @@ function getZodFieldType(
 	field: CollectionField,
 	schemaType: 'response' | 'create' | 'update'
 ): string | null {
-	const isOptional = !field.required || field.name === 'id';
+	// For update schemas, all fields except 'id' should be optional
+	const isOptional = schemaType === 'update' 
+		? field.name !== 'id' 
+		: !field.required || field.name === 'id';
 	const optionalSuffix = isOptional ? '.optional()' : '';
 
 	switch (field.type) {
@@ -327,27 +330,27 @@ function createValidationHelpers(definition: any) {
 
 	let helpers = `// Validation helpers for ${name}
 export const ${name}Validators = {
-    response: (data: unknown) => ${typeName}ResponseSchema.parse(data),
-    safeResponse: (data: unknown) => ${typeName}ResponseSchema.safeParse(data),`;
+    response: (data: unknown) => ${typeName}ResponseZodSchema.parse(data),
+    safeResponse: (data: unknown) => ${typeName}ResponseZodSchema.safeParse(data),`;
 
 	if (type !== 'view') {
 		helpers += `
-    create: (data: unknown) => ${typeName}CreateSchema.parse(data),
-    safeCreate: (data: unknown) => ${typeName}CreateSchema.safeParse(data),
-    update: (data: unknown) => ${typeName}UpdateSchema.parse(data),
-    safeUpdate: (data: unknown) => ${typeName}UpdateSchema.safeParse(data),`;
+    create: (data: unknown) => ${typeName}CreateZodSchema.parse(data),
+    safeCreate: (data: unknown) => ${typeName}CreateZodSchema.safeParse(data),
+    update: (data: unknown) => ${typeName}UpdateZodSchema.parse(data),
+    safeUpdate: (data: unknown) => ${typeName}UpdateZodSchema.safeParse(data),`;
 	}
 
 	helpers += `
 };
 
 // Type inference helpers for ${name}
-export type ${typeName}Response = z.infer<typeof ${typeName}ResponseSchema>;`;
+export type ${typeName}ResponseZod = z.infer<typeof ${typeName}ResponseZodSchema>;`;
 
 	if (type !== 'view') {
 		helpers += `
-export type ${typeName}Create = z.infer<typeof ${typeName}CreateSchema>;
-export type ${typeName}Update = z.infer<typeof ${typeName}UpdateSchema>;`;
+export type ${typeName}CreateZod = z.infer<typeof ${typeName}CreateZodSchema>;
+export type ${typeName}UpdateZod = z.infer<typeof ${typeName}UpdateZodSchema>;`;
 	}
 
 	return helpers;
