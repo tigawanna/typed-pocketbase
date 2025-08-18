@@ -27,10 +27,9 @@ export function getFieldType(
 		if (!field.hidden) {
 			if (field.name === 'id') {
 				update.push(`${name}: ${type};`);
-			} else if (name.endsWith("+'") || name.endsWith("-'")) {
-				update.push(`${name}?: ${type};`);
 			} else {
-				update.push(`${name}${field.required ? '' : '?'}: ${type};`);
+				// All fields except 'id' should be optional in update operations
+				update.push(`${name}?: ${type};`);
 			}
 		}
 	};
