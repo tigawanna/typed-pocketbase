@@ -25,12 +25,13 @@ export function getFieldType(
 	};
 	const addUpdate = (type: string, name = field.name) => {
 		if (!field.hidden) {
-			if (field.name === 'id') {
-				update.push(`${name}: ${type};`);
-			} else {
-				// All fields except 'id' should be optional in update operations
-				update.push(`${name}?: ${type};`);
-			}
+			update.push(`${name}?: ${type};`);
+			// if (field.name === 'id') {
+			// 	update.push(`${name}: ${type};`);
+			// } else {
+			// 	// All fields except 'id' should be optional in update operations
+			// 	update.push(`${name}?: ${type};`);
+			// }
 		}
 	};
 	const addAll = (type: string) => {
